@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+{% load static %}
+<head>
+    <!-- Page Title -->
+    <title>Мой портал</title>
+
+    <!-- Meta Data -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Уроки по Adobe Photoshop">
+
+    <!-- Web Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli%7CRubik:400,400i,500,700">
+
+    <!-- ======= Bootstrap CSS ======= -->
+    <link rel="stylesheet" href="{% static '/css/bootstrap.min.css' %}">
+
+    <!-- ======= Main Stylesheet ======= -->
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+
+
+</head>
+
+<body>
+
+    <!-- Header Begin -->
+    <header class="header">
+        <!-- Header Style One Begin -->
+        <div class="header-main style--one">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-3 col-sm-4 col-8">
+                        <!-- Logo Begin -->
+                        <div class="logo">
+                            <a href="index.html">
+                                <img class="default-logo" src="{% static '/img/logo.png' %}" data-rjs="2" alt="">
+                            </a>
+                        </div>
+                        <!-- Logo End -->
+                    </div>
+
+                    <div class="col-lg-9 col-sm-8 col-4">
+                        <!-- Main Menu Begin -->
+                        <div class="main-menu d-flex align-items-center justify-content-end">
+                            <ul class="nav align-items-center">
+                                <li class="current-menu-parent menu-item-has-children" >
+                                    <a href="/">Главная</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    {% if user.is_authenticated %}
+                                    <p>Привет, {{ user.username }}, вы авторизованы на сайте!</p>
+                                    <a href="{% url 'logout' %}">Выход</a></li>
+                                    {% else %}
+                                    <li class="menu-item-has-children"><a href="{% url 'signup' %}">Регистрация</a></li>
+                                    <li class="menu-item-has-children"><a href="{% url 'login' %}">Авторизация</a></li>
+                                    {% endif %}
+
+                            </ul>
+
+                        </div>
+                        <!-- Main Menu ENd -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Header Style One End -->
+    </header>
+    <!-- Header End -->
+
+    <!-- Project Begin -->
+    <section class="section-pattern">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Section Title Begin -->
+                    <div class="section-title text-center">
+                        <h3>Записи</h3>
+                        <h2>{{ film.title }}</h2>
+
+                    </div>
+                    <!-- Section Title End -->
+                </div>
+            </div>
+
+            <div class="row project-items grid">
+                <div class="project-body">
+                    <h4>Описание:</h4>
+                    <p>{{ film.description }}</p>
+                    <h4>Дата выхода:</h4>
+                    <p>{{ film.date_publ }}</p>
+                    <h4>Режиссеры:</h4>
+                    {% for direct in film.directions.all %}
+                        {{ direct.name }}
+                    {% endfor %}
+                    <h4>Жанры:</h4>
+                    {% for genr in film.genre.all %}
+                        {{ genr.name }}
+                    {% endfor %}
+                </div>
+
+
+            </div>
+                <div class="image"><img src="{{ film.imag.url }}" data-rjs="2"></div>
+        </div>
+    </section>
+    <div>
+        <span>Оставить отзыв</span>
+        <form action="{% url 'add_review' film.id %}" method="post">
+            {% csrf_token %}
+            <div>
+                <label>Ваш отзыв</label>
+                <textarea name="text_reviews"></textarea>
+            </div>
+            <div>
+                <label>Ваше имя *</label>
+                <input type="text" name="name">
+            </div>
+            <div>
+                <label>Ваш Email *</label>
+                <input type="email" name="email">
+            </div>
+            <div>
+                <input type="submit">
+            </div>
+        </form>
+    </div>
+    <div>
+        {% for review in film.reviews_set.all %}
+        <div>
+            <h5>{{ review.name }}</h5>
+            <p>{{ review.text_reviews }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- Project End -->
+
+
+    <!-- Footer Begin -->
+    <footer class="footer bg-light section-pattern footer-bg" data-bg-img="assets/img/section-pattern/footer-pattern.png">
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="copyright-text text-center">
+                            <span>&copy; Copyright 2022.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer Bottom End -->
+
+    </footer>
+    <!-- Footer End -->
+
+
+</body>
+</html>
